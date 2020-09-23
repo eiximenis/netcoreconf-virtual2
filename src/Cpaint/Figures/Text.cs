@@ -14,7 +14,7 @@ namespace Cpaint.Figures
         {
             TopLeft = position;
             _text = text;
-            Size = new CSize(1, text.Length);
+            Size = new CSize(rows: 1, cols: text.Length);
         }
 
         public override void Draw()

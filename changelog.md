@@ -23,3 +23,16 @@ Contiene la versión inicial
 ### Funcionales
 
 Nuevo comando `SetNextColor` (`p`) que itera sobre el color actual de la figura.
+
+## Csharp 4
+
+* Uso de parámetros opcionales en `Engine.DrawStatus`
+* Uso de parámetros nombrados en algunas llamadas
+* Uso de `dynamic` en `AdditionalCommands.Save`
+
+### Funcionales
+
+* Nuevo comando extendido (`:w`) para guardar el dibujo
+* Nuevo comando extendido (`:q`) para salir
+
+> Los comandos extendidos se pueden combinar. Sí... eso hace `:wq` xD

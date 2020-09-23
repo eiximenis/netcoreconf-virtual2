@@ -28,16 +28,17 @@ namespace Cpaint
             Console.ForegroundColor = ConsoleColor.White;
             Console.Clear();
             var line = (string)null;
-            while (true)
+            var exit = false;
+            while (!exit)
             {
-                DrawStatus(ConsoleColor.Black, ConsoleColor.White);
+                DrawStatus();
                 line = Console.ReadLine();
                 Console.BackgroundColor = ConsoleColor.Black;
-                ProcessLine(line);
+                exit = ProcessLine(line);
             }
         }
 
-        private void ProcessLine(string line)
+        private bool ProcessLine(string line)
         {
             line = line.Trim();
             if (line.Length > 0)
@@ -45,16 +46,34 @@ namespace Cpaint
                 char command = line[0];
                 switch (command)
                 {
-                    case 'd': ProcessDrawCommand(); break;
-                    case 'e': ProcessEraseCommand(); break;
-                    case 'a': ProcessAreasCommand(); break;
-                    case 'p': ProcessNextColorCommand(); break;
-                    case 's': ProcessSelectCommand(line.Substring(1)); break;
-                    case 'c': ProcessClearCommand(line.Substring(1)); break;
-                    case 'i': ProcessInsertCommand(line.Substring(1)); break;
-                    case 'm': ProcessMoveCommand(line.Substring(1)); break;
+                    case 'd': ProcessDrawCommand(); return false;
+                    case 'e': ProcessEraseCommand(); return false;
+                    case 'a': ProcessAreasCommand(); return false;
+                    case 'p': ProcessNextColorCommand(); return false;
+                    case 's': ProcessSelectCommand(line.Substring(1)); return false;
+                    case 'c': ProcessClearCommand(line.Substring(1)); return false;
+                    case 'i': ProcessInsertCommand(line.Substring(1)); return false;
+                    case 'm': ProcessMoveCommand(line.Substring(1)); return false;
+                    case ':': return ProcessExtendedCommand(line.Substring(1));
                 }
             }
+
+            return false;
+        }
+
+        private bool ProcessExtendedCommand(string additionalcommands)
+        {
+            var ret = false;
+            foreach (var cmd in additionalcommands)
+            {
+                switch (cmd)
+                {
+                    case 'w': AdditionalCommands.Save(_figures); break;
+                    case 'q': ret = true; break;
+                }
+            }
+
+            return ret;
         }
 
         private void ProcessNextColorCommand()
@@ -92,7 +111,7 @@ namespace Cpaint
                 var left = tokens[2];
                 var rows = tokens[3];
                 var cols = tokens[4];
-                var sq = new Square(new CPoint(int.Parse(left), int.Parse(top)), int.Parse(rows), int.Parse(cols));
+                var sq = new Square(new CPoint(x: int.Parse(left), y: int.Parse(top)), rows: int.Parse(rows), cols: int.Parse(cols));
                 _figures.Add(sq);
                 sq.SetForeground(_foreColor);
                 ProcessDrawCommand();
@@ -106,7 +125,7 @@ namespace Cpaint
                 var top = tokens[1];
                 var left = tokens[2];
                 var text = tokens[3];
-                var tx = new Text(new CPoint(int.Parse(left), int.Parse(top)), text);
+                var tx = new Text(new CPoint(x: int.Parse(left), y: int.Parse(top)), text);
                 tx.SetForeground(_foreColor);
                 _figures.Add(tx);
                 ProcessDrawCommand();
@@ -171,7 +190,7 @@ namespace Cpaint
 
         private void DrawInfo(string info)
         {
-            DrawStatus(ConsoleColor.Black, ConsoleColor.Green);
+            DrawStatus(back: ConsoleColor.Green);
             Console.Write(info);
             Console.ReadKey();
         }
@@ -179,7 +198,7 @@ namespace Cpaint
 
         private void DrawError(string err)
         {
-            DrawStatus(ConsoleColor.Black, ConsoleColor.Red);
+            DrawStatus(back: ConsoleColor.Red);
             Console.Write(err);
             Console.ReadKey();
         }
@@ -210,13 +229,13 @@ namespace Cpaint
 
 
 
-        private static void DrawStatus(ConsoleColor fore, ConsoleColor back)
+        private static void DrawStatus(ConsoleColor fore = ConsoleColor.Black, ConsoleColor back = ConsoleColor.White)
         {
             var line = Console.WindowHeight - 2;
             Console.SetCursorPosition(0, line);
             Console.BackgroundColor = back;
             Console.ForegroundColor = fore;
-            Console.Write(new string(' ', Console.WindowWidth ));
+            Console.Write(new string(' ', Console.WindowWidth));
             Console.SetCursorPosition(0, line);
         }
     }
