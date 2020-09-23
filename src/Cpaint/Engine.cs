@@ -10,13 +10,13 @@ namespace Cpaint
 {
     public class Engine
     {
-        private readonly FigureCollection _figures;
+        private readonly List<IFigure> _figures;
         private IFigure _selectedFigure;
         private ConsoleColor _foreColor;
 
         public Engine()
         {
-            _figures = new FigureCollection();
+            _figures = new  List<IFigure>();
             _selectedFigure = null;
             _foreColor = ConsoleColor.White;
         }
@@ -150,18 +150,25 @@ namespace Cpaint
             double min = double.MinValue;
             double max = 0.0;
             double avg = 0.0;
+            int count = 0;
 
             foreach (IFigure figure in _figures)
             {
-                double farea = figure.Area();
-                area += farea;
-                if (min < farea) min = farea;
-                if (farea > max) max = farea;
+                double? farea = figure.Area();
+                double areaValue = farea ?? 0;
+                area += farea ?? areaValue;
+                if (farea != null)
+                {
+                    if (min < areaValue) min = areaValue;
+                    if (areaValue > max) max = areaValue;
+                    count++;
+                }
+
             }
 
-            avg = area / _figures.Count;
+            avg = count > 0 ? area / count : double.NaN;
 
-            DrawInfo(string.Format("Total {0}, Min {1}, Max {2}, Avg {3} (Count {4})", area, min, max, avg, _figures.Count));
+            DrawInfo(string.Format("Total {0}, Min {1}, Max {2}, Avg {3} (Count {4})", area, min, max, avg, count));
         }
 
         private void DrawInfo(string info)

@@ -12,36 +12,36 @@ namespace Cpaint.Figures
 
         public Square(CPoint pos, int rows, int cols)
         {
-            _topLeft = pos;
-            _size = new CSize(rows, cols);
+            TopLeft = pos;
+            Size = new CSize(rows, cols);
         }
 
         public override void Draw()
         {
-            Console.ForegroundColor = _color;
+            Console.ForegroundColor = Color;
 
-            for (int line = 0; line < _size.Rows; line++)
+            for (int line = 0; line < Size.Rows; line++)
             {
-                Console.SetCursorPosition(_topLeft.X, TopLeft.Y + line);
-                if (line == 0 || line == _size.Rows - 1)
+                Console.SetCursorPosition(TopLeft.X, TopLeft.Y + line);
+                if (line == 0 || line == Size.Rows - 1)
                 {
-                    Console.Write(new string('*', _size.Cols));
+                    Console.Write(new string('*', Size.Cols));
                 }
                 else
                 {
                     Console.Write('*');
-                    if (_size.Cols > 2)
+                    if (Size.Cols > 2)
                     {
-                        Console.Write(new string(' ', _size.Cols - 2));
+                        Console.Write(new string(' ', Size.Cols - 2));
                     }
                     Console.Write('*');
                 }
             }
         }
 
-        public override double Area()
+        public override double? Area()
         {
-            return _size.Cols * _size.Rows;
+            return Size.Cols * Size.Rows;
         }
     }
 }

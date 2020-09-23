@@ -14,7 +14,7 @@ namespace Cpaint
         void Clear();
         void Draw();
 
-        double Area();
+        double? Area();
 
         void MoveTo(CPoint newTopLeft);
 

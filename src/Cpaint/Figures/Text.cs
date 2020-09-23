@@ -12,21 +12,21 @@ namespace Cpaint.Figures
 
         public Text(CPoint position, string text)
         {
-            _topLeft = position;
+            TopLeft = position;
             _text = text;
-            _size = new CSize(1, text.Length);
+            Size = new CSize(1, text.Length);
         }
 
         public override void Draw()
         {
-            Console.ForegroundColor = _color;
-            Console.SetCursorPosition(_topLeft.X, _topLeft.Y);
+            Console.ForegroundColor = Color;
+            Console.SetCursorPosition(TopLeft.X, TopLeft.Y);
             Console.Write(_text);
         }
 
-        public override double Area()
+        public override double? Area()
         {
-            return _size.Cols * _size.Rows;
+            return null;
         }
     }
 }

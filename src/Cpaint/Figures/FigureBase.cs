@@ -8,14 +8,15 @@ namespace Cpaint.Figures
 {
     public abstract class FigureBase : IFigure
     {
-        protected ConsoleColor _color;
+        private ConsoleColor _color;
 
         public ConsoleColor Color
         {
             get { return _color; }
+            protected set { _color = value; }
         }
 
-        protected CPoint _topLeft;
+        private CPoint _topLeft;
 
         public CPoint TopLeft
         {
@@ -23,15 +24,23 @@ namespace Cpaint.Figures
             {
                 return _topLeft;
             }
+            protected set
+            {
+                _topLeft = value;
+            }
         }
 
-        protected CSize _size;
+        private CSize _size;
 
         public CSize Size
         {
             get
             {
                 return _size;
+            }
+            protected set
+            {
+                _size = value;
             }
         }
 
@@ -61,7 +70,7 @@ namespace Cpaint.Figures
             }
         }
 
-        public abstract double Area();
+        public abstract double? Area();
 
     }
 }
