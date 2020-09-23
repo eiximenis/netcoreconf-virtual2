@@ -36,3 +36,9 @@ Nuevo comando `SetNextColor` (`p`) que itera sobre el color actual de la figura.
 * Nuevo comando extendido (`:q`) para salir
 
 > Los comandos extendidos se pueden combinar. Sí... eso hace `:wq` xD
+
+## Csharp 5
+
+* Uso de async/await
+
+

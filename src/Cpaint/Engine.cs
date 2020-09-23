@@ -22,7 +22,7 @@ namespace Cpaint
             _foreColor = ConsoleColor.White;
         }
 
-        public void Run()
+        public async Task Run()
         {
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
@@ -34,11 +34,11 @@ namespace Cpaint
                 DrawStatus();
                 line = Console.ReadLine();
                 Console.BackgroundColor = ConsoleColor.Black;
-                exit = ProcessLine(line);
+                exit = await ProcessLine(line);
             }
         }
 
-        private bool ProcessLine(string line)
+        private async Task<bool> ProcessLine(string line)
         {
             line = line.Trim();
             if (line.Length > 0)
@@ -54,21 +54,21 @@ namespace Cpaint
                     case 'c': ProcessClearCommand(line.Substring(1)); return false;
                     case 'i': ProcessInsertCommand(line.Substring(1)); return false;
                     case 'm': ProcessMoveCommand(line.Substring(1)); return false;
-                    case ':': return ProcessExtendedCommand(line.Substring(1));
+                    case ':': return await ProcessExtendedCommand(line.Substring(1));
                 }
             }
 
             return false;
         }
 
-        private bool ProcessExtendedCommand(string additionalcommands)
+        private async Task<bool> ProcessExtendedCommand(string additionalcommands)
         {
             var ret = false;
             foreach (var cmd in additionalcommands)
             {
                 switch (cmd)
                 {
-                    case 'w': AdditionalCommands.Save(_figures); break;
+                    case 'w': await AdditionalCommands.Save(_figures); break;
                     case 'q': ret = true; break;
                 }
             }

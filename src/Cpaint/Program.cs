@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Cpaint
 {
@@ -7,7 +8,7 @@ namespace Cpaint
         static void Main(string[] args)
         {
             var engine = new Engine();
-            engine.Run();
+            engine.Run().Wait();
         }
     }
 }
