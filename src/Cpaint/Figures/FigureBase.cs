@@ -8,48 +8,27 @@ namespace Cpaint.Figures
 {
     public abstract class FigureBase : IFigure
     {
-        private ConsoleColor _color;
-
         public ConsoleColor Color
         {
-            get { return _color; }
-            protected set { _color = value; }
+            get; protected set;
         }
-
-        private CPoint _topLeft;
 
         public CPoint TopLeft
         {
-            get
-            {
-                return _topLeft;
-            }
-            protected set
-            {
-                _topLeft = value;
-            }
+            get; protected set;
         }
-
-        private CSize _size;
 
         public CSize Size
         {
-            get
-            {
-                return _size;
-            }
-            protected set
-            {
-                _size = value;
-            }
+            get; protected set;
         }
 
         public void Clear()
         {
-            for (int i = 0; i < _size.Rows; i++)
+            for (var i = 0; i < Size.Rows; i++)
             {
-                Console.SetCursorPosition(_topLeft.X, _topLeft.Y + i);
-                Console.Write(new string(' ', _size.Cols));
+                Console.SetCursorPosition(TopLeft.X, TopLeft.Y + i);
+                Console.Write(new string(' ', Size.Cols));
             }
         }
 
@@ -57,15 +36,15 @@ namespace Cpaint.Figures
 
         public void MoveTo(CPoint newTopLeft)
         {
-            _topLeft = newTopLeft;
+            TopLeft = newTopLeft;
         }
 
 
         public void SetForeground(ConsoleColor color)
         {
-            if (_color != color)
+            if (Color != color)
             {
-                _color = color;
+                Color = color;
                 Draw();
             }
         }

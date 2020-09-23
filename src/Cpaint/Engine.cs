@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace Cpaint
 
         public Engine()
         {
-            _figures = new  List<IFigure>();
+            _figures = new List<IFigure>();
             _selectedFigure = null;
             _foreColor = ConsoleColor.White;
         }
@@ -26,7 +27,7 @@ namespace Cpaint
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
             Console.Clear();
-            string line = null;
+            var line = (string)null;
             while (true)
             {
                 DrawStatus(ConsoleColor.Black, ConsoleColor.White);
@@ -47,12 +48,20 @@ namespace Cpaint
                     case 'd': ProcessDrawCommand(); break;
                     case 'e': ProcessEraseCommand(); break;
                     case 'a': ProcessAreasCommand(); break;
+                    case 'p': ProcessNextColorCommand(); break;
                     case 's': ProcessSelectCommand(line.Substring(1)); break;
                     case 'c': ProcessClearCommand(line.Substring(1)); break;
                     case 'i': ProcessInsertCommand(line.Substring(1)); break;
                     case 'm': ProcessMoveCommand(line.Substring(1)); break;
                 }
             }
+        }
+
+        private void ProcessNextColorCommand()
+        {
+            if (_selectedFigure == null) return;
+            _selectedFigure.SetNextColor();
+            _selectedFigure.Draw();
         }
 
         private void ProcessMoveCommand(string command)
@@ -79,11 +88,11 @@ namespace Cpaint
         {
             if (tokens.Length > 4)
             {
-                string top = tokens[1];
-                string left = tokens[2];
-                string rows = tokens[3];
-                string cols = tokens[4];
-                Square sq = new Square(new CPoint(int.Parse(left), int.Parse(top)), int.Parse(rows), int.Parse(cols));
+                var top = tokens[1];
+                var left = tokens[2];
+                var rows = tokens[3];
+                var cols = tokens[4];
+                var sq = new Square(new CPoint(int.Parse(left), int.Parse(top)), int.Parse(rows), int.Parse(cols));
                 _figures.Add(sq);
                 sq.SetForeground(_foreColor);
                 ProcessDrawCommand();
@@ -94,10 +103,10 @@ namespace Cpaint
         {
             if (tokens.Length > 3)
             {
-                string top = tokens[1];
-                string left = tokens[2];
-                string text = tokens[3];
-                Text tx = new Text(new CPoint(int.Parse(left), int.Parse(top)), text);
+                var top = tokens[1];
+                var left = tokens[2];
+                var text = tokens[3];
+                var tx = new Text(new CPoint(int.Parse(left), int.Parse(top)), text);
                 tx.SetForeground(_foreColor);
                 _figures.Add(tx);
                 ProcessDrawCommand();
@@ -107,7 +116,7 @@ namespace Cpaint
         private void ProcessClearCommand(string command)
         {
             command = command.Trim();
-            int index = -1;
+            var index = -1;
             if (int.TryParse(command, out index))
             {
                 if (index < _figures.Count)
@@ -125,7 +134,7 @@ namespace Cpaint
         private void ProcessSelectCommand(string command)
         {
             command = command.Trim();
-            int index = -1;
+            var index = -1;
             if (int.TryParse(command, out index))
             {
                 if (index < _figures.Count)
@@ -146,27 +155,16 @@ namespace Cpaint
 
         private void ProcessAreasCommand()
         {
-            double area = 0.0;
-            double min = double.MinValue;
-            double max = 0.0;
-            double avg = 0.0;
-            int count = 0;
+            var min = _figures.Min(f => f.Area() ?? double.MaxValue);
+            var max = _figures.Max(f => f.Area() ?? 0.0);
+            var areas = _figures
+                .Select(f => f.Area())
+                .Where(x => x.HasValue)
+                .Select(x => x.Value);
 
-            foreach (IFigure figure in _figures)
-            {
-                double? farea = figure.Area();
-                double areaValue = farea ?? 0;
-                area += farea ?? areaValue;
-                if (farea != null)
-                {
-                    if (min < areaValue) min = areaValue;
-                    if (areaValue > max) max = areaValue;
-                    count++;
-                }
-
-            }
-
-            avg = count > 0 ? area / count : double.NaN;
+            var area = areas.Sum();
+            var avg = areas.Average();
+            var count = areas.Count();
 
             DrawInfo(string.Format("Total {0}, Min {1}, Max {2}, Avg {3} (Count {4})", area, min, max, avg, count));
         }
@@ -204,7 +202,7 @@ namespace Cpaint
         {
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Clear();
-            foreach (IFigure figure in _figures)
+            foreach (var figure in _figures)
             {
                 figure.Draw();
             }
@@ -214,11 +212,11 @@ namespace Cpaint
 
         private static void DrawStatus(ConsoleColor fore, ConsoleColor back)
         {
-            int line = Console.WindowHeight - 1;
+            var line = Console.WindowHeight - 2;
             Console.SetCursorPosition(0, line);
             Console.BackgroundColor = back;
             Console.ForegroundColor = fore;
-            Console.Write(new string(' ', Console.WindowWidth));
+            Console.Write(new string(' ', Console.WindowWidth ));
             Console.SetCursorPosition(0, line);
         }
     }

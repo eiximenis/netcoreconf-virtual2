@@ -20,23 +20,20 @@ namespace Cpaint.Figures
         {
             Console.ForegroundColor = Color;
 
-            for (int line = 0; line < Size.Rows; line++)
+            var lines = Enumerable.Range(0, Size.Rows)
+                .Select(i => (i == 0 || i == Size.Rows - 1) ?
+                    new string('*', Size.Cols) :
+                    string.Format("*{0}*", new string(' ', Size.Cols - 2)));
+
+
+            var offset = 0;
+            foreach (var line in lines)
             {
-                Console.SetCursorPosition(TopLeft.X, TopLeft.Y + line);
-                if (line == 0 || line == Size.Rows - 1)
-                {
-                    Console.Write(new string('*', Size.Cols));
-                }
-                else
-                {
-                    Console.Write('*');
-                    if (Size.Cols > 2)
-                    {
-                        Console.Write(new string(' ', Size.Cols - 2));
-                    }
-                    Console.Write('*');
-                }
+                Console.SetCursorPosition(TopLeft.X, TopLeft.Y + offset);
+                offset++;
+                Console.Write(line);
             }
+
         }
 
         public override double? Area()

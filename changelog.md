@@ -11,3 +11,15 @@ Contiene la versión inicial
 ### Funcionales
 
 * Ahora el texto no cuenta para el cálculo de área.
+
+## Csharp 3
+
+* Uso de LINQ para el comando de áreas
+* Uso de LINQ para dibujar los cuadrados
+* Uso de `var` y objetos anónimos
+* Propiedades auto-implementadas
+* Uso de métodos de extensión
+
+### Funcionales
+
+Nuevo comando `SetNextColor` (`p`) que itera sobre el color actual de la figura.
