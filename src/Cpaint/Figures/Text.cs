@@ -24,9 +24,6 @@ namespace Cpaint.Figures
             Console.Write(_text);
         }
 
-        public override double? Area()
-        {
-            return null;
-        }
+        public override double? Area() => null;
     }
 }

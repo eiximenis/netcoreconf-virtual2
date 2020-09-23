@@ -23,7 +23,7 @@ namespace Cpaint.Figures
             var lines = Enumerable.Range(0, Size.Rows)
                 .Select(i => (i == 0 || i == Size.Rows - 1) ?
                     new string('*', Size.Cols) :
-                    string.Format("*{0}*", new string(' ', Size.Cols - 2)));
+                    $"*{new string(' ', Size.Cols - 2)}*");
 
 
             var offset = 0;
@@ -36,9 +36,6 @@ namespace Cpaint.Figures
 
         }
 
-        public override double? Area()
-        {
-            return Size.Cols * Size.Rows;
-        }
+        public override double? Area() => Size.Cols * Size.Rows;
     }
 }

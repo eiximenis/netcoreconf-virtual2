@@ -16,7 +16,7 @@ namespace Cpaint
         public static async Task Save(IEnumerable<IFigure> figures)
         {
             var types = figures.Select(f => f.GetType().Name).ToArray();
-            var fname = "drawing_" + Guid.NewGuid().ToString("d");
+            var fname = $"drawing_{Guid.NewGuid()}";
             dynamic data = JArray.FromObject(figures);
             var idx = 0;
             foreach (dynamic item in data)

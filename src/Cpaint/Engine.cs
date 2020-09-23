@@ -1,11 +1,10 @@
 ﻿using Cpaint.Figures;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
+
+using static System.Console;
 
 namespace Cpaint
 {
@@ -24,16 +23,16 @@ namespace Cpaint
 
         public async Task Run()
         {
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Clear();
+            BackgroundColor = ConsoleColor.Black;
+            ForegroundColor = ConsoleColor.White;
+            Clear();
             var line = (string)null;
             var exit = false;
             while (!exit)
             {
                 DrawStatus();
-                line = Console.ReadLine();
-                Console.BackgroundColor = ConsoleColor.Black;
+                line = ReadLine();
+                BackgroundColor = ConsoleColor.Black;
                 exit = await ProcessLine(line);
             }
         }
@@ -78,9 +77,8 @@ namespace Cpaint
 
         private void ProcessNextColorCommand()
         {
-            if (_selectedFigure == null) return;
-            _selectedFigure.SetNextColor();
-            _selectedFigure.Draw();
+            _selectedFigure?.SetNextColor();
+            _selectedFigure?.Draw();
         }
 
         private void ProcessMoveCommand(string command)
@@ -185,22 +183,22 @@ namespace Cpaint
             var avg = areas.Average();
             var count = areas.Count();
 
-            DrawInfo(string.Format("Total {0}, Min {1}, Max {2}, Avg {3} (Count {4})", area, min, max, avg, count));
+            DrawInfo($"Total {area}, Min {min}, Max {max}, Avg {avg} (Count {count})");
         }
 
         private void DrawInfo(string info)
         {
             DrawStatus(back: ConsoleColor.Green);
-            Console.Write(info);
-            Console.ReadKey();
+            Write(info);
+            ReadKey();
         }
 
 
         private void DrawError(string err)
         {
             DrawStatus(back: ConsoleColor.Red);
-            Console.Write(err);
-            Console.ReadKey();
+            Write(err);
+            ReadKey();
         }
 
         private void ProcessEraseCommand()
@@ -219,8 +217,8 @@ namespace Cpaint
 
         private void ProcessDrawCommand()
         {
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.Clear();
+            BackgroundColor = ConsoleColor.Black;
+            Clear();
             foreach (var figure in _figures)
             {
                 figure.Draw();
@@ -231,12 +229,12 @@ namespace Cpaint
 
         private static void DrawStatus(ConsoleColor fore = ConsoleColor.Black, ConsoleColor back = ConsoleColor.White)
         {
-            var line = Console.WindowHeight - 2;
-            Console.SetCursorPosition(0, line);
-            Console.BackgroundColor = back;
-            Console.ForegroundColor = fore;
-            Console.Write(new string(' ', Console.WindowWidth));
-            Console.SetCursorPosition(0, line);
+            var line = WindowHeight - 2;
+            SetCursorPosition(0, line);
+            BackgroundColor = back;
+            ForegroundColor = fore;
+            Write(new string(' ', WindowWidth));
+            SetCursorPosition(0, line);
         }
     }
 }

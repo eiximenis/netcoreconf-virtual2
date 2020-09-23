@@ -41,4 +41,11 @@ Nuevo comando `SetNextColor` (`p`) que itera sobre el color actual de la figura.
 
 * Uso de async/await
 
+## Csharp 6
+
+* Uso de _null propagator_ (`?.`)
+* Uso de _readonly properties_ en `CSize` y `CPoint`.
+* Uso de interpolación de cadenas
+* Uso de _static import_ en `Engine`.
+
 
