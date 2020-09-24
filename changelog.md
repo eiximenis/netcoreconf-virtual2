@@ -50,7 +50,7 @@ Nuevo comando `SetNextColor` (`p`) que itera sobre el color actual de la figura.
 
 ## Csharp 7.0
 
-Refactoring de los comandos, basados en delegados.
+**Refactoring de los comandos, basados en delegados.**
 
 * Uso de _out variables_ en `Engine` (llamadas a `int.TryParse`)
 * Uso de _pattern matching_ (`BasicCommands.AreaCountCommand`)
@@ -62,3 +62,7 @@ Refactoring de los comandos, basados en delegados.
 
 Nuevo comando de contar area (`C`). Devuelve # figuras con área menor, igual o superior a la indicada.
 
+## Csharp 7.1
+
+* Uso de `async Main`
+* Uso de _default literal expressions_ (`DictionaryExtensions.GetOrDefault`)

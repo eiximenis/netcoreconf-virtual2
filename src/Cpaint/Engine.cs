@@ -77,7 +77,8 @@ namespace Cpaint
             if (line.Length > 0)
             {
                 char command = line[0];
-                if (_commands.TryGetValue(command, out var handler))
+                var handler = _commands.GetOrDefault(command);
+                if (handler != default)
                 {
                     await handler(line.Substring(1).Trim(), this);
                 }

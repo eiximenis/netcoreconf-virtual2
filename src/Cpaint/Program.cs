@@ -5,10 +5,10 @@ namespace Cpaint
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var engine = new Engine();
-            engine.Run().Wait();
+            await engine.Run();
         }
     }
 }
