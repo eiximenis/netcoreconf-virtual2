@@ -66,3 +66,9 @@ Nuevo comando de contar area (`C`). Devuelve # figuras con área menor, igual o 
 
 * Uso de `async Main`
 * Uso de _default literal expressions_ (`DictionaryExtensions.GetOrDefault`)
+
+## Csharp 7.2
+
+* Uso de _non trailing named arguments_ (`CreateSquare, CreateText`)
+* Uso de parámetros `in` (`Square.ctor`,  `Text.ctor`)
+

@@ -10,7 +10,7 @@ namespace Cpaint.Figures
     public class Square : FigureBase
     {
 
-        public Square(CPoint pos, int rows, int cols)
+        public Square(in CPoint pos, int rows, int cols)
         {
             TopLeft = pos;
             Size = new CSize(rows, cols);

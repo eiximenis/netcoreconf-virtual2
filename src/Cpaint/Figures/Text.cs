@@ -10,7 +10,7 @@ namespace Cpaint.Figures
     {
         private readonly string _text;
 
-        public Text(CPoint position, string text)
+        public Text(in CPoint position, string text)
         {
             TopLeft = position;
             _text = text ?? throw new ArgumentException("Can't create empty text");

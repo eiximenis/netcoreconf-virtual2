@@ -117,7 +117,8 @@ namespace Cpaint.Commands
                         int.TryParse(tokens[3], out var rows) &&
                         int.TryParse(tokens[4], out var cols))
                     {
-                        var sq = new Square(new CPoint(x: left, y: top), rows: rows, cols: cols);
+                        var pos = new CPoint(x: left, y: top);
+                        var sq = new Square(pos: in pos, rows, cols);
                         engine.AddFigure(sq);
                         sq.SetForeground(engine.ForeColor);
                         await DrawCommand("", engine);
@@ -133,7 +134,8 @@ namespace Cpaint.Commands
                         int.TryParse(tokens[2], out var left))
                     {
                         var text = tokens[3];
-                        var tx = new Text(new CPoint(x: left, y: top), text);
+                        var pos = new CPoint(x: left, y: top);
+                        var tx = new Text(position: in pos, text);
                         tx.SetForeground(engine.ForeColor);
                         engine.AddFigure(tx);
                         await DrawCommand("", engine);
