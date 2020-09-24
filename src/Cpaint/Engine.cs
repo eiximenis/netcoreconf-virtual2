@@ -1,4 +1,5 @@
-﻿using Cpaint.Figures;
+﻿using Cpaint.Commands;
+using Cpaint.Figures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,46 @@ namespace Cpaint
     public class Engine
     {
         private readonly List<IFigure> _figures;
+
+
         private IFigure _selectedFigure;
-        private ConsoleColor _foreColor;
+
+        public IFigure SelectedFigure
+        {
+            get => _selectedFigure;
+            set
+            {
+                if (value is null) _selectedFigure = null;
+                else if (_figures.Contains(value)) _selectedFigure = value;
+            }
+        }
+        public ConsoleColor ForeColor { get; private set; }
+        private readonly Dictionary<char, Func<string, Engine, Task<bool>>> _commands;
+
+        public IEnumerable<IFigure> Figures => _figures;
+
+        public void RemoveFigure(IFigure figure) => _figures.Remove(figure);
 
         public Engine()
         {
+            _commands = new Dictionary<char, Func<string, Engine, Task<bool>>>();
+            FillCommands();
             _figures = new List<IFigure>();
-            _selectedFigure = null;
-            _foreColor = ConsoleColor.White;
+            SelectedFigure = null;
+            ForeColor = ConsoleColor.White;
+
+            void FillCommands()
+            {
+                _commands.Add('d', BasicCommands.DrawCommand);
+                _commands.Add('e', BasicCommands.EraseCommand);
+                _commands.Add('a', BasicCommands.AreasCommand);
+                _commands.Add('p', BasicCommands.NextColorCommand);
+                _commands.Add('s', BasicCommands.SelectCommand);
+                _commands.Add('c', BasicCommands.ClearCommand);
+                _commands.Add('i', BasicCommands.InsertCommand);
+                _commands.Add('m', BasicCommands.MoveCommand);
+                _commands.Add('C', BasicCommands.AreaCountCommand);
+            }
         }
 
         public async Task Run()
@@ -37,28 +70,31 @@ namespace Cpaint
             }
         }
 
+
         private async Task<bool> ProcessLine(string line)
         {
             line = line.Trim();
             if (line.Length > 0)
             {
                 char command = line[0];
-                switch (command)
+                if (_commands.TryGetValue(command, out var handler))
                 {
-                    case 'd': ProcessDrawCommand(); return false;
-                    case 'e': ProcessEraseCommand(); return false;
-                    case 'a': ProcessAreasCommand(); return false;
-                    case 'p': ProcessNextColorCommand(); return false;
-                    case 's': ProcessSelectCommand(line.Substring(1)); return false;
-                    case 'c': ProcessClearCommand(line.Substring(1)); return false;
-                    case 'i': ProcessInsertCommand(line.Substring(1)); return false;
-                    case 'm': ProcessMoveCommand(line.Substring(1)); return false;
-                    case ':': return await ProcessExtendedCommand(line.Substring(1));
+                    await handler(line.Substring(1).Trim(), this);
+                }
+                else if (command == ':')
+                {
+                    return await ProcessExtendedCommand(line.Substring(1));
                 }
             }
 
             return false;
         }
+
+        public void RemoveFigureAt(int index) => _figures.RemoveAt(index);
+
+        public IFigure GetFigureAt(int index) => _figures[index];
+
+
 
         private async Task<bool> ProcessExtendedCommand(string additionalcommands)
         {
@@ -75,118 +111,16 @@ namespace Cpaint
             return ret;
         }
 
-        private void ProcessNextColorCommand()
+
+
+
+
+        public void AddFigure(IFigure figure)
         {
-            _selectedFigure?.SetNextColor();
-            _selectedFigure?.Draw();
+            if (!_figures.Contains(figure)) _figures.Add(figure);
         }
 
-        private void ProcessMoveCommand(string command)
-        {
-            if (_selectedFigure == null) return;
-            string[] tokens = command.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-            _selectedFigure.MoveTo(new CPoint(int.Parse(tokens[0]), int.Parse(tokens[1])));
-            ProcessDrawCommand();
-
-        }
-
-        private void ProcessInsertCommand(string command)
-        {
-            string[] tokens = command.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            switch (tokens[0])
-            {
-                case "s": CreateSquare(tokens); break;
-                case "t": CreateText(tokens); break;
-            }
-        }
-
-        private void CreateSquare(string[] tokens)
-        {
-            if (tokens.Length > 4)
-            {
-                var top = tokens[1];
-                var left = tokens[2];
-                var rows = tokens[3];
-                var cols = tokens[4];
-                var sq = new Square(new CPoint(x: int.Parse(left), y: int.Parse(top)), rows: int.Parse(rows), cols: int.Parse(cols));
-                _figures.Add(sq);
-                sq.SetForeground(_foreColor);
-                ProcessDrawCommand();
-            }
-        }
-
-        private void CreateText(string[] tokens)
-        {
-            if (tokens.Length > 3)
-            {
-                var top = tokens[1];
-                var left = tokens[2];
-                var text = tokens[3];
-                var tx = new Text(new CPoint(x: int.Parse(left), y: int.Parse(top)), text);
-                tx.SetForeground(_foreColor);
-                _figures.Add(tx);
-                ProcessDrawCommand();
-            }
-        }
-
-        private void ProcessClearCommand(string command)
-        {
-            command = command.Trim();
-            var index = -1;
-            if (int.TryParse(command, out index))
-            {
-                if (index < _figures.Count)
-                {
-                    _figures.RemoveAt(index);
-                    ProcessDrawCommand();
-                }
-            }
-            else
-            {
-                DrawError("ERROR");
-            }
-        }
-
-        private void ProcessSelectCommand(string command)
-        {
-            command = command.Trim();
-            var index = -1;
-            if (int.TryParse(command, out index))
-            {
-                if (index < _figures.Count)
-                {
-                    if (_selectedFigure != null)
-                    {
-                        _selectedFigure.SetForeground(_foreColor);
-                    }
-                    _selectedFigure = _figures[index];
-                    _selectedFigure.SetForeground(ConsoleColor.Blue);
-                }
-            }
-            else
-            {
-                DrawError("ERROR");
-            }
-        }
-
-        private void ProcessAreasCommand()
-        {
-            var min = _figures.Min(f => f.Area() ?? double.MaxValue);
-            var max = _figures.Max(f => f.Area() ?? 0.0);
-            var areas = _figures
-                .Select(f => f.Area())
-                .Where(x => x.HasValue)
-                .Select(x => x.Value);
-
-            var area = areas.Sum();
-            var avg = areas.Average();
-            var count = areas.Count();
-
-            DrawInfo($"Total {area}, Min {min}, Max {max}, Avg {avg} (Count {count})");
-        }
-
-        private void DrawInfo(string info)
+        public void DrawInfo(string info)
         {
             DrawStatus(back: ConsoleColor.Green);
             Write(info);
@@ -194,38 +128,12 @@ namespace Cpaint
         }
 
 
-        private void DrawError(string err)
+        public void DrawError(string err)
         {
             DrawStatus(back: ConsoleColor.Red);
             Write(err);
             ReadKey();
         }
-
-        private void ProcessEraseCommand()
-        {
-            if (_selectedFigure != null)
-            {
-                _figures.Remove(_selectedFigure);
-                _selectedFigure = null;
-                ProcessDrawCommand();
-            }
-            else
-            {
-                DrawError("NO FIGURE SELECTED");
-            }
-        }
-
-        private void ProcessDrawCommand()
-        {
-            BackgroundColor = ConsoleColor.Black;
-            Clear();
-            foreach (var figure in _figures)
-            {
-                figure.Draw();
-            }
-        }
-
-
 
         private static void DrawStatus(ConsoleColor fore = ConsoleColor.Black, ConsoleColor back = ConsoleColor.White)
         {

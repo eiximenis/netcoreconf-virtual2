@@ -48,4 +48,17 @@ Nuevo comando `SetNextColor` (`p`) que itera sobre el color actual de la figura.
 * Uso de interpolación de cadenas
 * Uso de _static import_ en `Engine`.
 
+## Csharp 7.0
+
+Refactoring de los comandos, basados en delegados.
+
+* Uso de _out variables_ en `Engine` (llamadas a `int.TryParse`)
+* Uso de _pattern matching_ (`BasicCommands.AreaCountCommand`)
+* Uso de funciones locales (`BasicCommands.InsertCommand`)
+* Uso de _throw expressions_ (`CSize`, `CPoint`)
+* Uso de tuplas (`AreasExtensions.CalculateStatistics`)
+
+### Funcionales
+
+Nuevo comando de contar area (`C`). Devuelve # figuras con área menor, igual o superior a la indicada.
 

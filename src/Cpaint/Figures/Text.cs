@@ -13,7 +13,7 @@ namespace Cpaint.Figures
         public Text(CPoint position, string text)
         {
             TopLeft = position;
-            _text = text;
+            _text = text ?? throw new ArgumentException("Can't create empty text");
             Size = new CSize(rows: 1, cols: text.Length);
         }
 

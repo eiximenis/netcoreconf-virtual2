@@ -13,8 +13,8 @@ namespace Cpaint
 
         public CSize(int rows, int cols)
         {
-            Rows = rows;
-            Cols = cols;
+            Rows = rows > 0 ? rows : throw new ArgumentException($"Invalid rows {rows}");
+            Cols = cols > 0 ? cols : throw new ArgumentException($"Invalid cols {cols}");
         }
     }
 }
