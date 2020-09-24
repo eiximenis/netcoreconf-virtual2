@@ -3,6 +3,7 @@ using Cpaint.Figures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using static System.Console;
@@ -13,10 +14,11 @@ namespace Cpaint
     {
         private readonly List<IFigure> _figures;
 
+        private readonly List<FigureAddedOperation> _addOperations;
 
-        private IFigure _selectedFigure;
+        private IFigure? _selectedFigure;
 
-        public IFigure SelectedFigure
+        public IFigure? SelectedFigure
         {
             get => _selectedFigure;
             set
@@ -34,6 +36,7 @@ namespace Cpaint
 
         public Engine()
         {
+            _addOperations = new List<FigureAddedOperation>();
             _commands = new Dictionary<char, Func<string, Engine, Task<bool>>>();
             FillCommands();
             _figures = new List<IFigure>();
@@ -59,14 +62,13 @@ namespace Cpaint
             BackgroundColor = ConsoleColor.Black;
             ForegroundColor = ConsoleColor.White;
             Clear();
-            var line = (string)null;
             var exit = false;
             while (!exit)
             {
                 DrawStatus();
-                line = ReadLine();
+                var line = ReadLine();
                 BackgroundColor = ConsoleColor.Black;
-                exit = await ProcessLine(line);
+                exit = await ProcessLine(line!);
             }
         }
 
@@ -106,6 +108,12 @@ namespace Cpaint
                 {
                     case 'w': await AdditionalCommands.Save(_figures); break;
                     case 'q': ret = true; break;
+                    case 'l':
+                        {
+                            AdditionalCommands.ListAdds(additionalcommands.Substring(1), CollectionsMarshal.AsSpan(_addOperations), this);
+                            await BasicCommands.DrawCommand("", this);
+                            break;
+                        }
                 }
             }
 
@@ -118,7 +126,11 @@ namespace Cpaint
 
         public void AddFigure(IFigure figure)
         {
-            if (!_figures.Contains(figure)) _figures.Add(figure);
+            if (!_figures.Contains(figure))
+            {
+                _figures.Add(figure);
+                _addOperations.Add(new FigureAddedOperation(figure, figure.Area()));
+            }
         }
 
         public void DrawInfo(string info)

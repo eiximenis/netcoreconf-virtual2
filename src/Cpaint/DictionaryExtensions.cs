@@ -9,7 +9,9 @@ namespace Cpaint
 {
     static class DictionaryExtensions
     {
-        public static V GetOrDefault<K, V>(this Dictionary<K, V> dictionary, K key) =>
+        public static V? GetOrDefault<K, V>(this Dictionary<K, V> dictionary, K key)
+            where V : class 
+            where K: notnull => 
             dictionary.TryGetValue(key, out var value) ? value : default;
     }
 }

@@ -11,7 +11,14 @@ namespace Cpaint
         ConsoleColor  Color { get; }
         CPoint TopLeft { get; }
         CSize Size { get; } 
-        void Clear();
+        void Clear()
+        {
+            for (var i = 0; i < Size.Rows; i++)
+            {
+                Console.SetCursorPosition(TopLeft.X, TopLeft.Y + i);
+                Console.Write(new string(' ', Size.Cols));
+            }
+        }
         void Draw();
 
         double? Area();

@@ -72,3 +72,16 @@ Nuevo comando de contar area (`C`). Devuelve # figuras con área menor, igual o 
 * Uso de _non trailing named arguments_ (`CreateSquare, CreateText`)
 * Uso de parámetros `in` (`Square.ctor`,  `Text.ctor`)
 
+## Csharp 8.0
+
+* Default method implementation (`IFigure.Clear`)
+* Index, Ranges y spans
+* **Nullable references**
+
+### Funcionales
+
+Nuevo comando extendido (`:l <start> <end>`) que lista las figuras añadidas
+
+## Csharp 9.0
+
+* Records

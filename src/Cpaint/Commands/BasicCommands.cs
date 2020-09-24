@@ -45,7 +45,7 @@ namespace Cpaint.Commands
             var areas = engine.Figures
                 .Select(f => f.Area())
                 .Where(x => x.HasValue)
-                .Select(x => x.Value);
+                .Select(x => x!.Value);
 
             var (area, avg, count) = areas.CalculateStatistics();
             engine.DrawInfo($"Total {area}, Min {min}, Max {max}, Avg {avg} (Count {count})");

@@ -8,12 +8,12 @@ namespace Cpaint.Figures
 {
     public class Text : FigureBase
     {
-        private readonly string _text;
+        public string Content { get; }
 
         public Text(in CPoint position, string text)
         {
             TopLeft = position;
-            _text = text ?? throw new ArgumentException("Can't create empty text");
+            Content = text ?? throw new ArgumentException("Can't create empty text");
             Size = new CSize(rows: 1, cols: text.Length);
         }
 
@@ -21,7 +21,7 @@ namespace Cpaint.Figures
         {
             Console.ForegroundColor = Color;
             Console.SetCursorPosition(TopLeft.X, TopLeft.Y);
-            Console.Write(_text);
+            Console.Write(Content);
         }
 
         public override double? Area() => null;

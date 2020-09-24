@@ -23,22 +23,12 @@ namespace Cpaint.Figures
             get; protected set;
         }
 
-        public void Clear()
-        {
-            for (var i = 0; i < Size.Rows; i++)
-            {
-                Console.SetCursorPosition(TopLeft.X, TopLeft.Y + i);
-                Console.Write(new string(' ', Size.Cols));
-            }
-        }
-
         public abstract void Draw();
 
         public void MoveTo(CPoint newTopLeft)
         {
             TopLeft = newTopLeft;
         }
-
 
         public void SetForeground(ConsoleColor color)
         {

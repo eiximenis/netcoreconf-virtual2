@@ -20,7 +20,7 @@ namespace Cpaint.Figures
         {
             Console.ForegroundColor = Color;
 
-            var lines = Enumerable.Range(0, Size.Rows)
+            var lines =  Enumerable.Range(0, Size.Rows)
                 .Select(i => (i == 0 || i == Size.Rows - 1) ?
                     new string('*', Size.Cols) :
                     $"*{new string(' ', Size.Cols - 2)}*");
