@@ -15,7 +15,7 @@ namespace Cpaint.Figures
 
         public CPoint TopLeft
         {
-            get; protected set;
+            get; private set;
         }
 
         public CSize Size
@@ -40,6 +40,11 @@ namespace Cpaint.Figures
         }
 
         public abstract double? Area();
+
+        protected FigureBase(CPoint topleft)
+        {
+            TopLeft = topleft;
+        }
 
     }
 }

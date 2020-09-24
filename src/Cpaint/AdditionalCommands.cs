@@ -32,7 +32,7 @@ namespace Cpaint
         {
             var tokens = command.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             var (from, _) = tokens.GetTokenAt(position: 0);
-            var (to, _) = tokens.GetTokenAt(position: 1, span.Length );
+            var (to, _) = tokens.GetTokenAt(position: 1, span.Length);
             var entries = span[from..to];
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Clear();
@@ -49,18 +49,25 @@ namespace Cpaint
             {
                 var str = entry.Figure switch
                 {
-                    Square s when s.Area() <= 16.0 => $"Small Square of area {s.Area()}",
-                    Square s when s.Area() > 16.0 && s.Area() <= 64.0 => $"Medium square of area {s.Area()}",
-                    Square s => $"Big square of area ${s.Area()}",
-                    Text t when t.Content.Length < 4 => $"Short text: {t.Content}",
-                    Text t when t.Content.Length >= 4 && t.Content.Length < 10 => $"Medium text: {t.Content}",
-                    Text t => $"Large text: {t.Content}",
+                    Square s => s.Area() switch
+                    {
+                        <= 16.0 => $"Small Square of area {s.Area()}",
+                        > 16.0 and <= 64.0 => $"Medium square of area {s.Area()}",
+                        _ => $"Big square of area ${s.Area()}"
+                    },
+                    Text t => t.Content.Length switch
+                    {
+                        < 4 => $"Short text: {t.Content}",
+                        >= 4 and < 10 => $"Medium text: {t.Content}",
+                        _ => "Large text: { t.Content}"
+                    },
+
                     _ => "Unknown figure"
                 };
 
                 Console.WriteLine(str);
 
-            }            
+            }
 
         }
     }

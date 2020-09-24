@@ -53,6 +53,7 @@ namespace Cpaint
                 _commands.Add('c', BasicCommands.ClearCommand);
                 _commands.Add('i', BasicCommands.InsertCommand);
                 _commands.Add('m', BasicCommands.MoveCommand);
+                _commands.Add('M', BasicCommands.MoveOffsetCommand);
                 _commands.Add('C', BasicCommands.AreaCountCommand);
             }
         }

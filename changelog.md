@@ -85,3 +85,9 @@ Nuevo comando extendido (`:l <start> <end>`) que lista las figuras añadidas
 ## Csharp 9.0
 
 * Records
+* Init properties
+* Extended pattern matching (`ListAdds.DumpEntry`)
+
+### Funcionales
+
+Nuevo comando _MoveOffset_ (`M`) que desplaza la figura seleccionada el offset de filas, columnas indicado

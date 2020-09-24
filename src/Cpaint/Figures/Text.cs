@@ -10,9 +10,8 @@ namespace Cpaint.Figures
     {
         public string Content { get; }
 
-        public Text(in CPoint position, string text)
+        public Text(in CPoint position, string text) : base (position)
         {
-            TopLeft = position;
             Content = text ?? throw new ArgumentException("Can't create empty text");
             Size = new CSize(rows: 1, cols: text.Length);
         }

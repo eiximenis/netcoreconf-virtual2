@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Cpaint
 {
-    public struct CPoint
+    public record CPoint
     {
-        public int X { get; }
-        public int Y { get; }
+        public int X { get; init; }
+        public int Y { get; init; }
+
+        public CPoint() { }
 
         public CPoint(int x, int y)
         {

@@ -117,7 +117,7 @@ namespace Cpaint.Commands
                         int.TryParse(tokens[3], out var rows) &&
                         int.TryParse(tokens[4], out var cols))
                     {
-                        var pos = new CPoint(x: left, y: top);
+                        var pos = new CPoint { X = left, Y = top };
                         var sq = new Square(pos: in pos, rows, cols);
                         engine.AddFigure(sq);
                         sq.SetForeground(engine.ForeColor);
@@ -134,7 +134,7 @@ namespace Cpaint.Commands
                         int.TryParse(tokens[2], out var left))
                     {
                         var text = tokens[3];
-                        var pos = new CPoint(x: left, y: top);
+                        var pos = new CPoint() { X = left, Y = top };
                         var tx = new Text(position: in pos, text);
                         tx.SetForeground(engine.ForeColor);
                         engine.AddFigure(tx);
@@ -148,7 +148,18 @@ namespace Cpaint.Commands
         {
             if (engine.SelectedFigure == null) return false;
             string[] tokens = command.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            engine.SelectedFigure.MoveTo(new CPoint(int.Parse(tokens[0]), int.Parse(tokens[1])));
+            engine.SelectedFigure.MoveTo(new CPoint() { X = int.Parse(tokens[0]), Y = int.Parse(tokens[1]) });
+            return await DrawCommand("", engine);
+        }
+
+        public static async Task<bool> MoveOffsetCommand(string command, Engine engine)
+        {
+            if (engine.SelectedFigure == null) return false;
+            string[] tokens = command.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var (rows, _) = tokens.GetTokenAt(position: 0, defaultValue: 0);
+            var (cols, _) = tokens.GetTokenAt(position: 1, defaultValue: 0);
+            engine.SelectedFigure.MoveTo(engine.SelectedFigure.TopLeft.Displace(rows, cols));
             return await DrawCommand("", engine);
         }
 
